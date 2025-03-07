@@ -1,18 +1,37 @@
 <template>
   <h1>Hello world</h1>
 
-  <form @submit.prevent="addTask">
-    <input v-model="title" type="text" placeholder="Unesite naslov zadatka" required />
-    <input v-model="description" type="text" placeholder="Unesite text zadatka" required />
-    <input v-model="dueDate" type="date" required />
-    <select v-model="priority">
+  <Form @submit="addTask">
+
+    <Field
+        name="title"
+        v-model="title"
+        type="text"
+        placeholder="Unesite naslov zadatka"
+        rules="required|min:3|startsWithCapital"
+    ></Field>
+    <ErrorMessage name="title"></ErrorMessage>
+
+    <!-- Min: 10, max: 20 (1000) -->
+    <Field
+        name="description"
+        v-model="description"
+        type="text"
+        placeholder="Unesite text zadatka"
+        rules="required|min:10|max:20"
+    ></Field>
+    <ErrorMessage name="description"></ErrorMessage>
+
+    <Field name="dueDate" v-model="dueDate" type="date"></Field>
+    <Field name="priority" as="select" v-model="priority">
       <option>Hitan</option>
       <option>Vazan</option>
       <option>Nije toliko vazan</option>
       <option>Nebitan</option>
-    </select>
+    </Field>
+
     <button>Snimi zadatak</button>
-  </form>
+  </Form>
 
   <div>
     <div v-for="(task, index) in tasks" :key="index">
@@ -31,9 +50,15 @@
 
 import { defineComponent } from "vue";
 import FormTaskType from "@/Types/FormTaskType";
+import {Form, Field, ErrorMessage} from "vee-validate";
 
-  export default defineComponent({
+export default defineComponent({
     name: "TodoList",
+    components: {
+      ErrorMessage,
+      Field,
+      Form
+    },
     data(): FormTaskType {
       return {
         title: '',
@@ -44,6 +69,7 @@ import FormTaskType from "@/Types/FormTaskType";
       }
     },
     methods: {
+
       addTask() {
 
         const taskExists = this.tasks.some(task => task.title === this.title.trim());
