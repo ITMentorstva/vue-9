@@ -8,7 +8,7 @@
         v-model="title"
         type="text"
         placeholder="Unesite naslov zadatka"
-        rules="required|min:3|startsWithCapital"
+        rules="required|min:3|startsWithCapital|minWords:5"
     ></Field>
     <ErrorMessage name="title"></ErrorMessage>
 
